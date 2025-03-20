@@ -5,26 +5,25 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name="playlists")
-public class Playlist extends Base
-{
+public class Playlist extends Base {
 
     @ManyToMany(mappedBy = "playlists", fetch = FetchType.LAZY)
-    private Set<Musica> musicas;
+    private Set<Musica> musicas = new HashSet<>();
 
     public Set<Musica> getMusicas() {
         return musicas;
     }
 
-    public void setMusicas(Set<Musica> musicas) {
-        this.musicas = musicas;
+    public void addMusica(Musica musica) {
+        this.musicas.add(musica);
     }
 
-
-
+    public void removeMusica(Musica musica) {
+        this.musicas.remove(musica);
+    }
 }
