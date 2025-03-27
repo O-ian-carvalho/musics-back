@@ -8,10 +8,8 @@ import com.example.musicas.repositories.PlaylistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -64,7 +62,9 @@ public class PlaylistService {
                 .orElseThrow(() -> new RuntimeException("Música não encontrada"));
 
         playlist.addMusica(musica);
-        return playlistRepository.save(playlist);
+        musica.getPlaylists().add(playlist); // Garante a persistência bidirecional
+
+        return playlist;
     }
 
     @Transactional

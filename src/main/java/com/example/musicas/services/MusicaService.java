@@ -12,10 +12,16 @@ import com.example.musicas.repositories.GeneroRepository;
 import com.example.musicas.repositories.MusicaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MusicaService {
@@ -33,17 +39,24 @@ public class MusicaService {
     }
 
     @Transactional
-    public MusicaResponseDto add(MusicaDto dto) {
+    public MusicaResponseDto add(MusicaDto dto, String url) {
         Optional<Genero> genero = generoRepository.findById(dto.generoId());
         Optional<Artista> artista = artistaRepository.findById(dto.artistaId());
-        Optional<Album> album = albumRepository.findById(dto.albumId());
+        Optional<Album> album = Optional.empty();;
+        if(dto.albumId() != null)
+        {
+            album = albumRepository.findById(dto.albumId());
+        }
+
 
         if (genero.isEmpty() || artista.isEmpty()) {
             throw new RuntimeException("Gênero ou Artista não encontrado!");
         }
 
         Musica musica = new Musica(dto.nome(), dto.lancamento(), dto.duracaoEmSegundos(),
-                genero.get(), artista.get(), album.orElse(null));
+                genero.get(), artista.get(), album.orElse(null), url);
+
+
 
         musica = musicaRepository.save(musica);
 
@@ -93,15 +106,39 @@ public class MusicaService {
         return false;
     }
 
+    public List<MusicaResponseDto> buscarMusicas(String titulo, String artista, String album, String genero, Integer ano) {
+        List<Musica> musicas = musicaRepository.buscarPorFiltros(titulo, artista, album, genero, ano);
+        return musicas.stream().map(this::convertToResponseDto).collect(Collectors.toList());
+    }
+
     private MusicaResponseDto convertToResponseDto(Musica musica) {
         return new MusicaResponseDto(
                 musica.getId(),
                 musica.getNome(),
+                musica.getUrl(),
                 musica.getLancamento(),
                 musica.getDuracaoEmSegundos(),
                 musica.getGenero(),
                 musica.getArtista(),
                 musica.getAlbum()
         );
+    }
+
+
+    private static final String DIRETORIO_UPLOAD = "C:\\Users\\carva\\OneDrive\\Documentos\\Estudos\\Faculdade\\OOP\\MusicsFront\\src\\assets\\musicas"; // Define o diretório de upload
+
+    public String saveArchive(MultipartFile arquivo) throws IOException {
+        Path caminhoDiretorio = Paths.get(DIRETORIO_UPLOAD);
+
+        if (!Files.exists(caminhoDiretorio)) {
+            Files.createDirectories(caminhoDiretorio);
+        }
+
+        String nomeArquivo = UUID.randomUUID() + "_" + arquivo.getOriginalFilename();
+        Path caminhoArquivo = caminhoDiretorio.resolve(nomeArquivo);
+
+        arquivo.transferTo(caminhoArquivo.toFile());
+
+        return nomeArquivo;
     }
 }

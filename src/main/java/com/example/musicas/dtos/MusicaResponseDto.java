@@ -10,6 +10,7 @@ import java.util.UUID;
 public record MusicaResponseDto(
         UUID id,
         String nome,
+        String url,
         Date lancamento,
         int duracaoEmSegundos,
         Genero genero,

@@ -1,5 +1,6 @@
 package com.example.musicas.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -13,9 +14,11 @@ import java.util.Set;
 public class Artista extends Base
 {
     @OneToMany(mappedBy = "artista", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Musica> musicas;
 
     @OneToMany(mappedBy = "artista", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Album> albuns;
 
     public Set<Musica> getMusicas() {
