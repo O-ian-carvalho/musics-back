@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-# aaaa
-## aaaaa
-##### aaaa
-=======
-# Sistema de Gerenciamento de Músicas - API Spring
 
 ## Como Executar
 
@@ -38,4 +32,4 @@ O arquivo será gerado na pasta `target/`. Para executá-lo:
 java -jar target/nome-do-arquivo.jar
 ```
 
->>>>>>> 47a31a0ae1dd84de6fe91fb0fe725e107b71df86
+
