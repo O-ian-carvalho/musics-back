@@ -4,12 +4,10 @@
 
 1. Clone este repositório:
    ```sh
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/https://github.com/O-ian-carvalho/musics-back
    ```
 2. Acesse o diretório do projeto:
-   ```sh
-   cd nome-do-projeto
-   ```
+  
 3. Instale as dependências (caso utilize Maven, por exemplo):
    ```sh
    mvn clean install
