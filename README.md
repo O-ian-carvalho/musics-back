@@ -1,4 +1,10 @@
 
+## Equipe
+- Ian Carvalho Santos Conceição
+- João Paulo Alves de carvalho
+- Enzo Franklin Alves e Souza
+- Jonathas Sampaio Mascarenhas Almeida
+  
 ## Como Executar
 
 1. Clone este repositório:
