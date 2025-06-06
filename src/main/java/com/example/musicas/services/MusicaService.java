@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,29 +39,56 @@ public class MusicaService {
         this.albumRepository = albumRepository;
     }
 
-    @Transactional
-    public MusicaResponseDto add(MusicaDto dto, String url) {
-        Optional<Genero> genero = generoRepository.findById(dto.generoId());
-        Optional<Artista> artista = artistaRepository.findById(dto.artistaId());
-        Optional<Album> album = Optional.empty();;
-        if(dto.albumId() != null)
-        {
-            album = albumRepository.findById(dto.albumId());
+
+
+    public byte[] getArquivoMusica(UUID id) {
+        Optional<Musica> musicaOptional = musicaRepository.findById(id);
+
+        if (musicaOptional.isEmpty()) {
+            throw new NoSuchElementException("Música não encontrada com o ID: " + id);
         }
 
+        Musica musica = musicaOptional.get();
+        byte[] arquivo = musica.getArquivoMusica();
 
-        if (genero.isEmpty() || artista.isEmpty()) {
-            throw new RuntimeException("Gênero ou Artista não encontrado!");
+        if (arquivo == null || arquivo.length == 0) {
+            throw new IllegalStateException("Arquivo de música não encontrado ou está vazio");
         }
 
-        Musica musica = new Musica(dto.nome(), dto.lancamento(), dto.duracaoEmSegundos(),
-                genero.get(), artista.get(), album.orElse(null), url);
+        return arquivo;
+    }
+    public MusicaResponseDto add(MusicaDto dto, MultipartFile arquivo) throws IOException {
+        try {
+            // Busca as entidades
+            Genero genero = generoRepository.findById(dto.generoId())
+                    .orElseThrow(() -> new RuntimeException("Gênero não encontrado"));
 
+            Artista artista = artistaRepository.findById(dto.artistaId())
+                    .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
 
+            Album album = null;
+            if (dto.albumId() != null) {
+                album = albumRepository.findById(dto.albumId()).orElse(null);
+            }
 
-        musica = musicaRepository.save(musica);
+            // Cria a música
+            Musica musica = new Musica();
+            musica.setNome(dto.nome());
+            musica.setLancamento(dto.lancamento());
+            musica.setDuracaoEmSegundos(dto.duracaoEmSegundos());
+            musica.setGenero(genero);
+            musica.setArtista(artista);
+            musica.setAlbum(album);
+            musica.setArquivoMusica(arquivo.getBytes());
 
-        return convertToResponseDto(musica);
+            // Salva
+            musica = musicaRepository.save(musica);
+
+            return convertToResponseDto(musica);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar música: " + e.getMessage(), e);
+        }
     }
 
     public List<MusicaResponseDto> getAll() {

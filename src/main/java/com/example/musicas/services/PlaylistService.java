@@ -8,9 +8,7 @@ import com.example.musicas.repositories.PlaylistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PlaylistService {
@@ -77,5 +75,22 @@ public class PlaylistService {
 
         playlist.removeMusica(musica);
         return playlistRepository.save(playlist);
+    }
+
+
+    public List<Musica> getMusicasOrdenadas(UUID playlistId, String criterio) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new NoSuchElementException("Playlist não encontrada com o ID: " + playlistId));
+
+        List<Musica> musicas = new ArrayList<>(playlist.getMusicas());
+
+        switch (criterio.toLowerCase()) {
+            case "titulo" -> musicas.sort(Comparator.comparing(Musica::getNome, String.CASE_INSENSITIVE_ORDER));
+            case "artista" -> musicas.sort(Comparator.comparing(m -> m.getArtista().getNome(), String.CASE_INSENSITIVE_ORDER));
+            case "duracao" -> musicas.sort(Comparator.comparingInt(Musica::getDuracaoEmSegundos));
+            default -> throw new IllegalArgumentException("Critério de ordenação inválido");
+        }
+
+        return musicas;
     }
 }

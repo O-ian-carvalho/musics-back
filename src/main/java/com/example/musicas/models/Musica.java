@@ -55,6 +55,11 @@ public class Musica extends Base {
         this.url = url;
     }
 
+    @Lob
+    @Column(name = "arquivo_musica", columnDefinition = "LONGBLOB")
+    @JsonIgnore
+    private byte[] arquivoMusica;
+
     public String getUrl() {
         return url;
     }
@@ -96,5 +101,11 @@ public class Musica extends Base {
     }
 
 
+    public byte[] getArquivoMusica() {
+        return arquivoMusica;
+    }
 
+    public void setArquivoMusica(byte[] arquivoMusica) {
+        this.arquivoMusica = arquivoMusica;
+    }
 }

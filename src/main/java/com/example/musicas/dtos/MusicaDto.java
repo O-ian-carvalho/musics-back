@@ -15,7 +15,4 @@ public record MusicaDto(
         UUID generoId,
         UUID artistaId,
         UUID albumId
-) {
-    @JsonCreator
-    public MusicaDto {}
-}
+) {}
