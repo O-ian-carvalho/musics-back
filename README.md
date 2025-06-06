@@ -1,10 +1,10 @@
-<<<<<<< HEAD
-# aaaa
-## aaaaa
-##### aaaa
-=======
-# Sistema de Gerenciamento de Músicas - API Spring
 
+## Equipe
+- Ian Carvalho Santos Conceição
+- João Paulo Alves de carvalho
+- Enzo Franklin Alves e Souza
+- Jonathas Sampaio Mascarenhas Almeida
+  
 ## Como Executar
 
 1. Clone este repositório:
@@ -38,4 +38,4 @@ O arquivo será gerado na pasta `target/`. Para executá-lo:
 java -jar target/nome-do-arquivo.jar
 ```
 
->>>>>>> 47a31a0ae1dd84de6fe91fb0fe725e107b71df86
+
