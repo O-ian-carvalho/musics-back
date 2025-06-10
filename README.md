@@ -26,18 +26,7 @@ cd musics-back
 Certifique-se de que o MySQL esteja instalado e em execução. Em seguida, crie um banco de dados para o projeto:
 
 ```sql
-CREATE DATABASE musicdb;
-```
-
-Depois, configure o arquivo `application.properties` (ou `application.yml`) com suas credenciais de acesso, exemplo:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/musicdb
-spring.datasource.username=root
-spring.datasource.password=suasenha
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+CREATE DATABASE musicas_db;
 ```
 
 ### 4. Instale as dependências:
